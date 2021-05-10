@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// import bodyParser from "body-parser";
 const cors = require("cors");
 const dotenv = require("dotenv");
 const app = express();
@@ -19,13 +18,19 @@ mongoose.connect(URL, {
     useUnifiedTopology: true,
     useFindAndModify: false
 
-
 });
 
 const connection = mongoose.connection;
 connection.once("open", () => {
     console.log("Mongodb connection success!!");
 });
+
+const userRouter = require('./routes/users.js');
+// http://localhost:8070/user
+app.use('/user', userRouter);
+
+const itemRouter = require('./routes/items.js');
+app.use('/item', itemRouter);
 
 app.listen(PORT, () => {
     console.log(`server is up and running in port ${PORT}`);
