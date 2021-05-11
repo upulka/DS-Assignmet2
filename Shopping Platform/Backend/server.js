@@ -32,6 +32,9 @@ app.use('/user', userRouter);
 const itemRouter = require('./routes/items.js');
 app.use('/item', itemRouter);
 
+const orderRouter = require('./routes/orders.js');
+app.use('/order', orderRouter);
+
 app.listen(PORT, () => {
     console.log(`server is up and running in port ${PORT}`);
 });
