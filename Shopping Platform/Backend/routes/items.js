@@ -13,7 +13,7 @@ const multer = require('multer');
 // })
 
 // const upload = multer({storage: storage});
-
+//add new item 
 router.route('/addItem').post((req, res)=> {
     const name = req.body.name;
     const price = Number(req.body.price);
@@ -33,6 +33,7 @@ router.route('/addItem').post((req, res)=> {
         console.log(err)
     })
 })
+//het all items
 router.route('/').get((req, res)=>{
     Item.find().then((items)=>{
         res.json(items)
@@ -40,13 +41,32 @@ router.route('/').get((req, res)=>{
         console.log(err)
     })
 })
+//get item of given category
+router.route("/:category").get(async(req, res)=>{
+    let category = req.params.category;
+    Item.find({ category:category}, function (err, docs) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            res.status(200).send(docs)
+        }
+    })
+    .catch((err)=>{
+        console.log(err)
+    });
 
+})
+
+//find a item by its item id
 router.route('/:id').get(async(req, res)=>{
     let id = req.params.id;
-    const item = await Item.findById(id).then(()=>{
+    Item.findById(id).then((item)=>{
         res.status(200).send({item: item})
     }).catch((err)=>{
         res.status(500).send({status: "Error with get item", error:err.message});
     })
 })
+
+
 module.exports = router;

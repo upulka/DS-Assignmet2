@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
@@ -25,10 +26,17 @@ const userSchema = new Schema({
     phone: {
         type: String,
         required: true
-    }
+    },
+});
 
-})
-
+//method to generate encrypted password
+userSchema.methods.generateHash = function(password){
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+}
+//validate the encrypted password
+userSchema.methods.validPassword = function(password){
+    return bcrypt.compareSync(password, this.password);
+}
 const User = mongoose.model('User',userSchema);
 
 module.exports = User;
