@@ -62,7 +62,7 @@ router.route("/findByCateory/:category").get(async(req, res)=>{
 router.route('/findById/:id').get(async(req, res)=>{
     let id = req.params.id;
     const item = await Item.findById(id).then((item)=>{
-        res.status(200).send({status:"fetchItems", item})
+        res.status(200).send(item)
     }).catch((err)=>{
         res.status(500).send({status: "Error with get item", error:err.message});
     })

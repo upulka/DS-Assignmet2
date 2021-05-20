@@ -14,20 +14,17 @@ router.route('/addToCart').post((req, res)=> {
         {   
             const item = req.body.cartItems.item;
             //if cart exist update the cart
-            const i= cart.cartItems.find(cart=>cart.item== item);
+            const i= cart.cartItems.find(cart=>cart.item === item);
 
             //if the added item exists in the cart
             if(i){
                 //increase the quantity 
                 Cart.findOneAndUpdate({user: req.body.user, "cartItems.item":item },
                     {
-                        "$set":{
-                            "cartItems.$": {
-                                ...req.body.cartItems,
-                                quantity: i.quantity+ req.body.cartItems.quantity
-                            }
-                        }
+                        //increment by 1
+                        $inc: {"cartItems.$.quantity": 1},
                     },
+                                    
                     null, (err, cart)=>{
                         if(err){
                             return res.send({
@@ -66,8 +63,7 @@ router.route('/addToCart').post((req, res)=> {
                             cart: _cart
                     });
                 
-                    })
-                    
+                    })  
             }
 
         }else{
@@ -93,18 +89,57 @@ router.route('/addToCart').post((req, res)=> {
 
     
 });
+// reduce a number of item
+router.route('/reduce').post((req, res)=> {
+    //get a specific user's cart
+    Cart.findOne({user: req.body.user})
+    .exec((err, cart)=>{
+        if(err){
+            return res.status(400).json({err});
+        }
+        if(cart)
+        {   
+            const item = req.body.cartItems.item;
+            //if cart exist update the cart
+            const i= cart.cartItems.find(cart=>cart.item === item);
 
+            //if the added item exists in the cart
+            if(i){
+                //decrease the quantity 
+                Cart.findOneAndUpdate({user: req.body.user, "cartItems.item":item },
+                    {
+                        //decrement by 1
+                                        $inc: {"cartItems.$.quantity": -1},
+                                    },
+                                    
+                    null, (err, cart)=>{
+                        if(err){
+                            return res.send({
+                                success: false,
+                                message: 'error',
+                            });
+                        }       
+                        return res.send({
+                            success: true,
+                            message: 'added to cart',
+                            cart: cart
+                    });}
+                    )
+            }
+            
+        }
+
+    });   
+});
 
 router.route('/getCart/:userId').get((req, res)=> {
     Cart.findOne({user: req.params.userId}, function (err, cart) {
         if (err){
             console.log(err);
         }
-        else{
-            res.status(200).send(
-                cart.cartItems
-            )
-        }
+       if(cart){
+            res.send(cart.cartItems);
+       }
     })
     
 });
