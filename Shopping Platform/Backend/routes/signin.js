@@ -97,7 +97,7 @@ router.route('/verify').get((req, res)=>{
 }
     })
     .catch((err)=>{
-        console.log(err)
+        console.error(err)
     });
 });
 
