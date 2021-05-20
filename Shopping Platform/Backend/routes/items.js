@@ -32,17 +32,17 @@ router.route('/addItem').post((req, res)=> {
     }).catch((err)=>{
         console.log(err)
     })
-})
-//het all items
+});
+//get all items
 router.route('/').get((req, res)=>{
     Item.find().then((items)=>{
         res.json(items)
     }).catch((err)=>{
         console.log(err)
     })
-})
+});
 //get item of given category
-router.route("/:category").get(async(req, res)=>{
+router.route("/findByCateory/:category").get(async(req, res)=>{
     let category = req.params.category;
     Item.find({ category:category}, function (err, docs) {
         if (err){
@@ -56,13 +56,13 @@ router.route("/:category").get(async(req, res)=>{
         console.log(err)
     });
 
-})
+});
 
 //find a item by its item id
-router.route('/:id').get(async(req, res)=>{
+router.route('/findById/:id').get(async(req, res)=>{
     let id = req.params.id;
-    Item.findById(id).then((item)=>{
-        res.status(200).send({item: item})
+    const item = await Item.findById(id).then((item)=>{
+        res.status(200).send({status:"fetchItems", item})
     }).catch((err)=>{
         res.status(500).send({status: "Error with get item", error:err.message});
     })
