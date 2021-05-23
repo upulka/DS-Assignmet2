@@ -11,6 +11,7 @@ import SellerDashboard from './components/SellerDashboard';
 import React, { useState } from 'react';
 
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
+import AddPaymentInfo from "./components/AddPaymentInfo";
 
 export class App extends React.Component {
 
@@ -69,7 +70,9 @@ logoutSuccess=()=>{
           <Route path="/registerUser" exact component={()=><RegisterUser signinSuccess={this.signinSuccess} />}/>
           <Route path="/categories" exact component={Categories}/>
           <Route path="/sellerDashboard" exact component={SellerDashboard}/>
+          <Route path = "/newOrder" exact component = {AddPaymentInfo}/>
           <Redirect to="/home"/>
+
         </Switch>
       </Router>
     );
